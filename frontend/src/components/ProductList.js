@@ -9,7 +9,11 @@ const ProductList = () => {
     getProducts();
   }, []);
   const getProducts = async () => {
-    let result = await fetch("http://localhost:4500/products");
+    let result = await fetch("http://localhost:4500/products", {
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("token")),
+      },
+    });
     result = await result.json();
     setProducts(result);
   };
@@ -33,6 +37,16 @@ const ProductList = () => {
       });
     }
   };
+  const handleSearch = async (e) => {
+    let key = e.target.value;
+    if (key) {
+      let result = await fetch(`http://localhost:4500/search/${key}`);
+      result = await result.json();
+      setProducts(result);
+    } else {
+      getProducts();
+    }
+  };
 
   return (
     <>
@@ -41,6 +55,12 @@ const ProductList = () => {
           <h4>All Products</h4>
         </div>
         <div className="card-body">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Serach Prodct Here.."
+            onChange={(e) => handleSearch(e)}
+          />
           <table className="table">
             <thead>
               <tr>
@@ -52,32 +72,36 @@ const ProductList = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((item, index) => {
-                return (
-                  <tr key={item._id}>
-                    <th scope="row">{index + 1}</th>
-                    <td>{item.name}</td>
-                    <td>{item.price}</td>
-                    <td>{item.category}</td>
-                    <td>
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => deleteProduct(item._id)}
-                      >
-                        <i className="fa fa-trash" aria-hidden="true"></i>
-                      </button>
+              {products.length > 0 ? (
+                products.map((item, index) => {
+                  return (
+                    <tr key={item._id}>
+                      <th scope="row">{index + 1}</th>
+                      <td>{item.name}</td>
+                      <td>{item.price}</td>
+                      <td>{item.category}</td>
+                      <td>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => deleteProduct(item._id)}
+                        >
+                          <i className="fa fa-trash" aria-hidden="true"></i>
+                        </button>
 
-                      <Link
-                        to={`update/${item._id}`}
-                        className="btn btn-success  m-2"
-                      >
-                        <i className="fa fa-pencil" aria-hidden="true"></i>
-                      </Link>
-                      {/* <Link to={"update" + item._id}>Update</Link> */}
-                    </td>
-                  </tr>
-                );
-              })}
+                        <Link
+                          to={`update/${item._id}`}
+                          className="btn btn-success  m-2"
+                        >
+                          <i className="fa fa-pencil" aria-hidden="true"></i>
+                        </Link>
+                        {/* <Link to={"update" + item._id}>Update</Link> */}
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <h2 className="p-2">No Record Found</h2>
+              )}
             </tbody>
           </table>
         </div>
