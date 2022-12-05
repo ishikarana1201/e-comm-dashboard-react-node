@@ -21,8 +21,17 @@ const Login = () => {
       },
     });
     result = await result.json();
-    if (result.name) {
-      localStorage.setItem("user", JSON.stringify(result));
+    // Replace
+    // if (result.name) {
+    //   localStorage.setItem("user", JSON.stringify(result));
+    //   navigate("/");
+    // } else {
+    //   alert("Plese enter correct cradentials");
+    // }
+    // end
+    if (result.auth) {
+      localStorage.setItem("user", JSON.stringify(result.user));
+      localStorage.setItem("token", JSON.stringify(result.auth));
       navigate("/");
     } else {
       alert("Plese enter correct cradentials");
