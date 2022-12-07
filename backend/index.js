@@ -3,16 +3,39 @@ const cors = require("cors");
 require("./db/config");
 const User = require("./db/User");
 const Product = require("./db/Product");
+const multer = require("multer");
+
+// Path for image
+// var router = express.Router();
+// router.use(express.static(__dirname + "./public/"));
 
 // jwt token
 
 const Jwt = require("jsonwebtoken");
+const path = require("path");
 const JwtKey = "e-comm";
 const app = express();
-
+// app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(__dirname + "/public/uploads"));
+// app.use(express.static("public"));
+// app.use("/public/uploads", express.static("uploads"));
 app.use(express.json());
 
 app.use(cors());
+app.use("/public/uploads/", express.static(__dirname + "/public/uploads/"));
+// Multer middleware
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+var upload = multer({
+  storage: storage,
+}).single("image");
+
 // Add User API
 // app.post("/register", async (req, res) => {
 //   let user = new User(req.body);
@@ -67,7 +90,9 @@ app.post("/login", async (req, res) => {
 
 // Add Product API
 
-app.post("/add-product", verifyToken, async (req, res) => {
+app.post("/add-product", upload, verifyToken, async (req, res) => {
+  // console.log("hello");
+  req.body.image = req.file.path;
   let product = new Product(req.body);
   let result = await product.save();
   res.send(result);
@@ -104,7 +129,8 @@ app.get("/product/:id", verifyToken, async (req, res) => {
 
 // Update Product API
 
-app.put("/product/:id", verifyToken, async (req, res) => {
+app.put("/product/:id", upload, verifyToken, async (req, res) => {
+  // req.body.image = req.file.path;
   const result = await Product.updateOne(
     { _id: req.params.id },
     { $set: req.body }
@@ -126,11 +152,13 @@ app.get("/search/:key", verifyToken, async (req, res) => {
   res.send(result);
 });
 
+// Verify Token middleware
+
 function verifyToken(req, res, next) {
   let token = req.headers["authorization"];
   if (token) {
     token = token.split(" ")[1];
-    console.log("middleware Called", token);
+    // console.log("middleware Called", token);
     Jwt.verify(token, JwtKey, (err, valid) => {
       if (err) {
         res.status(401).send({ result: "Please provide valid token" });
@@ -142,4 +170,5 @@ function verifyToken(req, res, next) {
     res.status(403).send({ result: "Please add token" });
   }
 }
+
 app.listen(4500);

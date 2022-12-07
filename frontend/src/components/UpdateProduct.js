@@ -7,6 +7,7 @@ const UpdateProduct = () => {
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [company, setCompany] = useState("");
+
   const [error, setError] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
@@ -20,7 +21,7 @@ const UpdateProduct = () => {
       },
     });
     result = await result.json();
-    console.log(result);
+    // console.log(result);
     setName(result.name);
     setCategory(result.category);
     setCompany(result.company);
@@ -29,14 +30,22 @@ const UpdateProduct = () => {
 
   const updateProduct = async (e) => {
     e.preventDefault();
+    // console.log(name, category, price, company, image);
+    const form = new FormData();
+    form.append("name", name);
+    form.append("category", category);
+    form.append("company", company);
+    form.append("price", price);
+    // form.append("image", image);
     console.log(name, price, category, company);
     let result = await fetch(`http://localhost:4500/product/${params.id}`, {
       method: "Put",
-      body: JSON.stringify({ name, price, category, company }),
+
       headers: {
-        "Content-Type": "application/json",
+        // "Content-Type": "application/json",
         authorization: `bearer ${JSON.parse(localStorage.getItem("token"))}`,
       },
+      body: form,
     });
     result = await result.json();
     navigate("/");
@@ -56,7 +65,7 @@ const UpdateProduct = () => {
 
   return (
     <>
-      <form className="productForm">
+      <form className="productForm" encType="multipart/form-data">
         <h3>Update Product</h3>
         <hr />
         <div className="mb-3">
@@ -111,6 +120,7 @@ const UpdateProduct = () => {
             onChange={(e) => setCompany(e.target.value)}
           />
         </div>
+
         <button
           type="submit"
           onClick={(e) => updateProduct(e)}

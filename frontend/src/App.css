@@ -1,23 +1,31 @@
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
 .nav-ul {
+  padding: 0;
+  margin: 0;
+  margin-right: 5%;
   display: inline-flex;
   list-style-type: none;
+  align-items: center;
 }
 .nav {
   width: 100%;
+  justify-content: space-between;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 li {
-  padding: 10px;
-  margin-top: 10px;
+  padding: 10px 20px;
 }
 .nav-ul li a {
   color: black;
-  padding: 10px;
+  padding: 0;
   text-decoration: none;
 }
 .footer {
-  position: absolute;
-  bottom: 0;
+  margin-top: auto;
   text-align: center;
   width: 100%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -53,4 +61,33 @@ li {
 }
 .table {
   margin-top: 2%;
+}
+
+/* Box CSS */
+.wrap-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 20px 10px;
+}
+.box {
+  width: calc(100% / 4 - 12px);
+  aspect-ratio: 1/0.7;
+  background-color: red;
+}
+.addImage {
+  padding: 20px 0;
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+.titlediv {
+  font-size: 35px;
+  font-family: cursive;
+}
+.btndiv {
+  font-size: 20px;
+  padding: 10px;
 }

@@ -76,6 +76,7 @@ const ProductList = () => {
                 <th scope="col">Name</th>
                 <th scope="col">Price</th>
                 <th scope="col">Category</th>
+                <th scope="col">Image</th>
                 <th scope="col">Actions</th>
               </tr>
             </thead>
@@ -88,6 +89,14 @@ const ProductList = () => {
                       <td>{item.name}</td>
                       <td>{item.price}</td>
                       <td>{item.category}</td>
+                      <td>
+                        <img
+                          src={`http://localhost:4500/${item.image}`}
+                          alt={item.name}
+                          width="50"
+                          height="50"
+                        />
+                      </td>
                       <td>
                         <button
                           className="btn btn-danger"
